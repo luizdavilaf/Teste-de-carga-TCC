@@ -1,0 +1,87 @@
+config:
+  target: 'https://tcc-democratic.com.br/noauth'
+  # target: 'http://localhost:3000/noauth'
+  http:
+    # Responses have to be sent within 10 seconds, or an `ETIMEDOUT` error gets raised.
+    # extendedMetrics: true
+    timeout: 10
+  phases:
+  # durante 50 segundos 2 requisicoes por segundo
+    - duration: 20
+      arrivalRate: 1
+  plugins:
+    metrics-by-endpoint:
+      # Group metrics by request name rather than URL:
+      useOnlyRequestNames: true
+scenarios:
+  - flow:    
+    - get:
+        url: '/candidate-election/result-year'
+        name: "gerar todos graficos da eleicao"
+        # afterScenario: "logResults"
+        expect:
+          - statusCode: 200
+        qs:
+          eleicao: 1053
+          abrangencia: "FEDERAL"
+          regiao: 13
+          situacao_turno: "todos"
+          cargo: "todos"
+    - post:
+        url: '/candidate-election/compare-elections'
+        name: "comparar duas eleicoes por ocupacao"
+        # afterScenario: "logResults"
+        expect:
+          - statusCode: 200
+        json:
+          variavel: "ocupacao"
+          eleicao1:
+            eleicao: 1051
+            abrangencia: "FEDERAL"
+            regiao: 8
+            situacao_turno: "todos"
+            cargo: "todos"
+          eleicao2:
+            eleicao: 1049
+            abrangencia: "FEDERAL"
+            regiao: 8
+            situacao_turno: "todos"
+            cargo: "todos"
+    - get:
+        url: '/candidate/search'
+        name: "gerar tabela de busca de candidato"
+        # afterScenario: "logResults"
+        expect:
+          - statusCode: 200
+        qs:
+          candidatoid: 4397
+    - post:
+        url: '/candidate-election/historic-evolution'
+        name: "evolucao historica de regiao"
+        # afterScenario: "logResults"
+        expect:
+          - statusCode: 200
+        json:
+          variavel: "ocupacao"
+          eleicao1:
+            eleicao: 1051
+            abrangencia: "MUNICIPAL"
+            regiao: 3872
+            situacao_turno: "todos"
+            cargo: "todos"
+    - post:
+        url: '/party/historic-evolution'
+        name: "evolucao historica de partido"
+        afterScenario: "logResults"
+        expect:
+          - statusCode: 200
+        json:
+          variavel: "ocupacao"
+          partido: 4
+          abrangencia: "MUNICIPAL"
+    
+
+          
+            
+            
+            

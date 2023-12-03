@@ -1,10 +1,10 @@
 config:
-  target: 'https://tcc-democratic.com.br/noauth'
-  # target: 'http://localhost:3000/noauth'
+  #target: 'https://tcc-democratic.com.br/noauth'
+  target: 'http://localhost:3000/noauth'
   http:
     # Responses have to be sent within 10 seconds, or an `ETIMEDOUT` error gets raised.
     # extendedMetrics: true
-    timeout: 10
+    timeout: 20
   phases:
   # durante 50 segundos 2 requisicoes por segundo
     - duration: 20
